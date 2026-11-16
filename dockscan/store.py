@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS decision(subject TEXT PRIMARY KEY,status TEXT NOT NUL
 CREATE TABLE IF NOT EXISTS evidence(subject TEXT NOT NULL REFERENCES subject(id),event_id INTEGER NOT NULL REFERENCES event(id),rule_version TEXT NOT NULL,run_id INTEGER NOT NULL REFERENCES run(id),PRIMARY KEY(subject,event_id,rule_version));
 CREATE TABLE IF NOT EXISTS run(id INTEGER PRIMARY KEY,started_at TEXT NOT NULL,completed_at TEXT,status TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS lineage(parent_box TEXT NOT NULL,child_box TEXT NOT NULL,quantity INTEGER NOT NULL,kind TEXT NOT NULL,event_id INTEGER NOT NULL REFERENCES event(id),PRIMARY KEY(parent_box,child_box,event_id));
+CREATE TABLE IF NOT EXISTS conflict(id INTEGER PRIMARY KEY,kind TEXT NOT NULL,dock TEXT NOT NULL,box_a TEXT NOT NULL,box_b TEXT NOT NULL,categories_a TEXT NOT NULL,categories_b TEXT NOT NULL,origins_a TEXT NOT NULL,origins_b TEXT NOT NULL,bay_a TEXT,bay_b TEXT,overlap_start TEXT NOT NULL,overlap_end TEXT NOT NULL,policy TEXT NOT NULL,config_version TEXT NOT NULL,outcome TEXT NOT NULL,detail TEXT NOT NULL,run_id INTEGER NOT NULL REFERENCES run(id));
 """
 def connect(path):
     p=Path(path);p.parent.mkdir(parents=True,exist_ok=True)
