@@ -1,0 +1,53 @@
+{
+  "config_version": "2026.02-seg-ex",
+  "safety_policy": "dock_window_exclusive",
+  "hazard_classes": {
+    "general": {"incompatible_with": []},
+    "flammable": {"incompatible_with": ["oxidizer"]},
+    "oxidizer": {"incompatible_with": ["flammable"]}
+  },
+  "segregation_bays": [
+    {
+      "bay": "BAY-A",
+      "dock": "D1",
+      "certified_from": "2026-01-01T07:00:00Z",
+      "certified_until": "2026-01-01T12:00:00Z",
+      "classes": ["flammable", "general"]
+    },
+    {
+      "bay": "BAY-B",
+      "dock": "D1",
+      "certified_from": "2026-01-01T07:00:00Z",
+      "certified_until": "2026-01-01T12:00:00Z",
+      "classes": ["oxidizer", "general"]
+    }
+  ],
+  "boxes": [
+    {
+      "box": "B-FL",
+      "order": "OF",
+      "pallet": "PF",
+      "quantity": 4,
+      "dock": "D1",
+      "window_start": "2026-01-01T08:00:00Z",
+      "window_end": "2026-01-01T10:00:00Z",
+      "expected_kg": 40,
+      "tolerance_kg": 2,
+      "hazard_class": "flammable",
+      "bay": "BAY-A"
+    },
+    {
+      "box": "B-OX",
+      "order": "OO",
+      "pallet": "PO",
+      "quantity": 4,
+      "dock": "D1",
+      "window_start": "2026-01-01T09:00:00Z",
+      "window_end": "2026-01-01T11:00:00Z",
+      "expected_kg": 40,
+      "tolerance_kg": 2,
+      "hazard_class": "general",
+      "bay": "BAY-B"
+    }
+  ]
+}

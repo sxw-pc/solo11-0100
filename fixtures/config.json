@@ -1,4 +1,27 @@
 {
+  "config_version": "2026.01-base",
+  "safety_policy": "dock_window_exclusive",
+  "hazard_classes": {
+    "general": {"incompatible_with": []},
+    "flammable": {"incompatible_with": ["oxidizer"]},
+    "oxidizer": {"incompatible_with": ["flammable"]}
+  },
+  "segregation_bays": [
+    {
+      "bay": "BAY-A",
+      "dock": "D1",
+      "certified_from": "2026-01-01T00:00:00Z",
+      "certified_until": "2026-12-31T23:59:59Z",
+      "classes": ["flammable", "general"]
+    },
+    {
+      "bay": "BAY-B",
+      "dock": "D1",
+      "certified_from": "2026-01-01T00:00:00Z",
+      "certified_until": "2026-12-31T23:59:59Z",
+      "classes": ["oxidizer", "general"]
+    }
+  ],
   "boxes": [
     {
       "box": "B1",
@@ -9,7 +32,8 @@
       "window_start": "2026-01-01T08:00:00Z",
       "window_end": "2026-01-01T10:00:00Z",
       "expected_kg": 20,
-      "tolerance_kg": 2
+      "tolerance_kg": 2,
+      "hazard_class": "general"
     }
   ]
 }

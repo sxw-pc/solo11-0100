@@ -1,0 +1,12 @@
+{"kind": "gate", "subject": "B-FL", "identity": "D1:101", "time": "2026-01-01T08:05:00Z", "dock": "D1"}
+{"kind": "unload", "subject": "B-FL", "identity": "D1:102", "time": "2026-01-01T08:10:00Z", "dock": "D1", "quantity": 4}
+{"kind": "weight", "subject": "B-FL", "identity": "D1:103", "time": "2026-01-01T08:15:00Z", "dock": "D1", "net_kg": 40}
+{"kind": "split", "subject": "B-FL", "identity": "D1:104", "time": "2026-01-01T08:20:00Z", "dock": "D1", "quantity": 4, "children": [{"id": "B-FL-1", "quantity": 2}, {"id": "B-FL-2", "quantity": 2}]}
+{"kind": "check", "subject": "B-FL", "identity": "D1:105", "time": "2026-01-01T08:25:00Z", "dock": "D1"}
+{"kind": "exit", "subject": "B-FL", "identity": "D1:106", "time": "2026-01-01T08:30:00Z", "dock": "D1"}
+{"kind": "gate", "subject": "B-OX", "identity": "D1:107", "time": "2026-01-01T09:05:00Z", "dock": "D1"}
+{"kind": "unload", "subject": "B-OX", "identity": "D1:108", "time": "2026-01-01T09:10:00Z", "dock": "D1", "quantity": 4}
+{"kind": "weight", "subject": "B-OX", "identity": "D1:109", "time": "2026-01-01T09:15:00Z", "dock": "D1", "net_kg": 40}
+{"kind": "merge", "subject": "B-OX", "identity": "D1:110", "time": "2026-01-01T09:20:00Z", "dock": "D1", "quantity": 4, "parents": [{"id": "B-OX-A", "quantity": 2, "class": "oxidizer", "bay": "BAY-B"}, {"id": "B-OX-B", "quantity": 2, "class": "oxidizer", "bay": "BAY-B"}]}
+{"kind": "check", "subject": "B-OX", "identity": "D1:111", "time": "2026-01-01T09:25:00Z", "dock": "D1"}
+{"kind": "exit", "subject": "B-OX", "identity": "D1:112", "time": "2026-01-01T09:30:00Z", "dock": "D1"}
