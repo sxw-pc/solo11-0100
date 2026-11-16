@@ -1,0 +1,14 @@
+{"kind": "gate", "subject": "B1", "identity": "D1:1", "time": "2026-01-01T08:05:00Z", "dock": "D1"}
+{"kind": "unload", "subject": "B1", "identity": "D1:2", "time": "2026-01-01T08:10:00Z", "dock": "D1", "quantity": 4}
+{"kind": "weight", "subject": "B1", "identity": "D1:3", "time": "2026-01-01T08:15:00Z", "dock": "D1", "gross_kg": 61.0, "tare_kg": 1.2, "net_kg": 59.8, "calibration_version": "SC-1-v2"}
+{"kind": "check", "subject": "B1", "identity": "D1:4", "time": "2026-01-01T08:20:00Z", "dock": "D1"}
+{"kind": "split", "subject": "B1", "identity": "D1:5", "time": "2026-01-01T08:25:00Z", "dock": "D1", "quantity": 4, "children": [{"id": "B1-A", "quantity": 2}, {"id": "B1-B", "quantity": 2}]}
+{"kind": "weight", "subject": "B1-A", "identity": "D1:6", "time": "2026-01-01T08:30:00Z", "dock": "D1", "gross_kg": 30.7, "tare_kg": 0.3, "calibration_version": "SC-1-v2"}
+{"kind": "split", "subject": "B1-A", "identity": "D1:7", "time": "2026-01-01T08:35:00Z", "dock": "D1", "quantity": 2, "children": [{"id": "L1", "quantity": 1}, {"id": "L2", "quantity": 1}]}
+{"kind": "weight", "subject": "B1-B", "identity": "D1:8", "time": "2026-01-01T08:40:00Z", "dock": "D1", "gross_kg": 30.3, "tare_kg": 0.5, "calibration_version": "SC-1-v2"}
+{"kind": "split", "subject": "B1-B", "identity": "D1:9", "time": "2026-01-01T08:45:00Z", "dock": "D1", "quantity": 2, "children": [{"id": "L3", "quantity": 1}, {"id": "B1-X", "quantity": 1}]}
+{"kind": "merge", "subject": "B1-M", "identity": "D1:10", "time": "2026-01-01T08:50:00Z", "dock": "D1", "quantity": 2, "parents": [{"id": "L2", "quantity": 1}, {"id": "B1-X", "quantity": 1}]}
+{"kind": "weight", "subject": "B1-M", "identity": "D1:11", "time": "2026-01-01T08:55:00Z", "dock": "D1", "gross_kg": 31.0, "tare_kg": 0.0, "calibration_version": "SC-1-v2"}
+{"kind": "weight", "subject": "L1", "identity": "D1:12", "time": "2026-01-01T08:56:00Z", "dock": "D1", "gross_kg": 14.9, "calibration_version": "SC-1-v2"}
+{"kind": "weight", "subject": "L3", "identity": "D1:13", "time": "2026-01-01T08:57:00Z", "dock": "D1", "gross_kg": 15.1, "calibration_version": "SC-1-v2"}
+{"kind": "exit", "subject": "B1", "identity": "D1:14", "time": "2026-01-01T09:00:00Z", "dock": "D1"}
