@@ -1,0 +1,5 @@
+{"kind": "gate", "subject": "B1", "identity": "D1:1", "time": "2026-01-01T08:05:00Z", "dock": "D1"}
+{"kind": "unload", "subject": "B1", "identity": "D1:2", "time": "2026-01-01T08:10:00Z", "dock": "D1", "quantity": 4}
+{"kind": "weight", "subject": "B1", "identity": "D1:3", "time": "2026-01-01T08:15:00Z", "dock": "D1", "net_kg": 20}
+{"kind": "check", "subject": "B1", "identity": "D1:4", "time": "2026-01-01T08:20:00Z", "dock": "D1"}
+{"kind": "exit", "subject": "B1", "identity": "D1:5", "time": "2026-01-01T08:25:00Z", "dock": "D1"}
