@@ -1,0 +1,14 @@
+{"kind": "gate", "subject": "B1", "device": "D1", "seq": 1, "time": "2026-01-01T08:05:00Z", "dock": "D1"}
+{"kind": "unload", "subject": "B1", "device": "D2", "seq": 1, "time": "2026-01-01T08:05:00Z", "dock": "D1", "quantity": 4}
+{"kind": "weight", "subject": "B1", "device": "D1", "seq": 2, "time": "2026-01-01T08:10:00Z", "dock": "D1", "net_kg": 20}
+{"kind": "check", "subject": "B1", "device": "D1", "seq": 3, "time": "2026-01-01T08:15:00Z", "dock": "D1"}
+{"kind": "exit", "subject": "B1", "device": "D1", "seq": 4, "time": "2026-01-01T08:20:00Z", "dock": "D1"}
+{"kind": "gate", "subject": "B2", "device": "D3", "seq": 1, "time": "2026-01-01T08:05:00Z", "dock": "D1"}
+{"kind": "unload", "subject": "B2", "device": "D3", "seq": 2, "time": "2026-01-01T08:10:00Z", "dock": "D1", "quantity": 6}
+{"kind": "weight", "subject": "B2", "device": "D3", "seq": 3, "time": "2026-01-01T08:15:00Z", "dock": "D1", "net_kg": 60}
+{"kind": "check", "subject": "B2", "device": "D3", "seq": 4, "time": "2026-01-01T08:18:00Z", "dock": "D1"}
+{"kind": "split", "subject": "B2", "device": "D3", "seq": 5, "time": "2026-01-01T08:20:00Z", "dock": "D1", "quantity": 6, "children": [{"id": "B2a", "quantity": 3}, {"id": "B2b", "quantity": 3}]}
+{"kind": "check", "subject": "B2a", "device": "D4", "seq": 1, "time": "2026-01-01T08:25:00Z", "dock": "D1"}
+{"kind": "check", "subject": "B2b", "device": "D5", "seq": 1, "time": "2026-01-01T08:25:00Z", "dock": "D1"}
+{"kind": "merge", "subject": "B2c", "device": "D4", "seq": 2, "time": "2026-01-01T08:30:00Z", "dock": "D1", "quantity": 6, "parents": [{"id": "B2a", "quantity": 3}, {"id": "B2b", "quantity": 3}]}
+{"kind": "exit", "subject": "B2", "device": "D3", "seq": 6, "time": "2026-01-01T08:40:00Z", "dock": "D1"}

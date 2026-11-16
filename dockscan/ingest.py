@@ -42,14 +42,16 @@ def import_file(db_path,path):
                 kind=str(row['kind']); subject=str(row['subject']);ts=str(row['time'])
                 normalized=timestamp(ts).astimezone(timezone.utc).isoformat()
                 identity=str(row.get('identity') or f"{row['device']}:{int(row['seq'])}")
+                device=row.get('device');device=str(device) if device is not None else None
+                seq=row.get('seq');seq=int(seq) if seq is not None else None
                 if not kind or not subject: raise ValueError('missing_kind_or_subject')
                 canonical=json.dumps(row,sort_keys=True,ensure_ascii=False,separators=(',',':'))
                 h=hash_bytes(canonical.encode())
                 old=db.execute('SELECT sha256 FROM event WHERE identity=?',(identity,)).fetchone()
                 if old:
-                    if old['sha256']!=h: db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('identity_conflict',identity))
+                    if old['sha256']!=h: db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('identity_conflict',json.dumps({'identity':identity,'device':device},ensure_ascii=False)))
                     continue
-                db.execute('INSERT INTO event(source_id,line_no,identity,subject,kind,time,payload,sha256) VALUES (?,?,?,?,?,?,?,?)',(sid,line_no,identity,subject,kind,normalized,canonical,h));count+=1
+                db.execute('INSERT INTO event(source_id,line_no,identity,subject,kind,time,device,seq,payload,sha256) VALUES (?,?,?,?,?,?,?,?,?,?)',(sid,line_no,identity,subject,kind,normalized,device,seq,canonical,h));count+=1
             except (ValueError,TypeError,KeyError,json.JSONDecodeError) as exc:
                 db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('parse_error',json.dumps({'source_id':sid,'line_no':line_no,'error':str(exc),'raw_line':line},ensure_ascii=False)))
     db.close();return {'imported':count,'duplicate_file':False}

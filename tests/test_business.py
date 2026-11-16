@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dockscan.ingest import freeze_config, import_file
 from dockscan.rules import evaluate
+from dockscan.report import export
 from dockscan.store import connect
 
 
