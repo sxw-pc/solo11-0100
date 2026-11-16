@@ -3,6 +3,8 @@ from datetime import datetime,timezone
 from collections import defaultdict
 from .store import connect
 from .ingest import timestamp
+from .identity import known_box,valid_lineage
+from .timeline import advance
 
 VERSION='1'
 def evaluate(db_path):
@@ -20,16 +22,15 @@ def evaluate(db_path):
                 v=json.loads(e['payload']);kind=e['kind'];time=timestamp(e['time'])
                 if v.get('dock')!=order['dock'] or not timestamp(order['window_start'])<=time<=timestamp(order['window_end']):problems.append('wrong_dock_or_window')
                 if kind in ('gate','unload','check','exit'):
-                    expected=('gate','unload','check','exit')[stage] if stage<4 else None
-                    if kind!=expected:problems.append('illegal_transition')
-                    else:stage+=1
+                    stage,error=advance(stage,kind)
+                    if error:problems.append(error)
                 if kind=='unload':received+=int(v.get('quantity',0))
                 if kind=='weight':weight=float(v['net_kg'])
                 if kind in ('split','merge'):
                     parts=v.get('children',[]) if kind=='split' else v.get('parents',[])
                     source=int(v.get('quantity',0))
                     if sum(int(c['quantity']) for c in parts)!=source:problems.append('quantity_not_conserved')
-                    elif any(int(c['quantity'])<=0 or c['id']==box for c in parts):problems.append('invalid_lineage')
+                    elif not valid_lineage(box,parts,source):problems.append('invalid_lineage')
                     else:
                         for part in parts:
                             parent,child=(box,part['id']) if kind=='split' else (part['id'],box)
@@ -42,11 +43,11 @@ def evaluate(db_path):
             if db.execute("SELECT 1 FROM issue WHERE code='identity_conflict'").fetchone():problems.append('identity_conflict')
             status='blocked' if any(p in problems for p in ('illegal_transition','wrong_dock_or_window','quantity_not_conserved','invalid_lineage','weight_mismatch')) else ('pending' if problems else 'accepted')
             detail=json.dumps({'expected':order['quantity'],'received':received,'weight':weight,'issues':sorted(set(problems)),'evidence':[e['id'] for e in events]},ensure_ascii=False)
-            db.execute('INSERT INTO decision VALUES (?,?,?,?)',(box,status,detail,VERSION))
-            for e in events:db.execute('INSERT INTO evidence VALUES (?,?,?)',(box,e['id'],VERSION))
+            db.execute('INSERT INTO decision VALUES (?,?,?,?,?)',(box,status,detail,VERSION,run_id))
+            for e in events:db.execute('INSERT INTO evidence VALUES (?,?,?,?)',(box,e['id'],VERSION,run_id))
             for code in sorted(set(problems)):db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',(code,box))
             results[box]=status
         for box in by:
-            db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('unknown_box',box))
+            if not known_box(box,orders):db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('unknown_box',box))
         db.execute('UPDATE run SET completed_at=?,status=? WHERE id=?',(datetime.now(timezone.utc).isoformat(),'done',run_id))
     db.close();return results

@@ -91,3 +91,38 @@ def test_unknown_box_is_reported(tmp_path):
                                     'time':'2026-01-01T08:05:00Z','dock':'D1'})
     _,issues=run_case(tmp_path,events)
     assert 'unknown_box' in issues
+
+
+def test_duplicate_appointment_subject_is_rejected(tmp_path):
+    from dockscan.ingest import freeze_config
+    import pytest
+    cfg=json.loads((BASE/'config.json').read_text())
+    cfg['boxes'].append(dict(cfg['boxes'][0]))
+    p=tmp_path/'bad.json';p.write_text(json.dumps(cfg))
+    with pytest.raises(ValueError,match='duplicate_or_missing_subject'):
+        freeze_config(tmp_path/'bad.db',p)
+
+
+def test_window_boundary_is_inclusive(tmp_path):
+    events=fixture();events[0]['time']='2026-01-01T08:00:00Z'
+    events[-1]['time']='2026-01-01T10:00:00Z'
+    result,issues=run_case(tmp_path,events)
+    assert result['B1']=='accepted'
+    assert 'wrong_dock_or_window' not in issues
+
+
+def test_late_scan_blocks(tmp_path):
+    events=fixture();events[-1]['time']='2026-01-01T10:00:01Z'
+    result,issues=run_case(tmp_path,events)
+    assert result['B1']=='blocked'
+    assert 'wrong_dock_or_window' in issues
+
+
+def test_audit_entities_and_evidence_chain(tmp_path):
+    result,_=run_case(tmp_path,fixture())
+    db=connect(tmp_path/'case.db')
+    for table in ('batch','subject','source','event','issue','decision','evidence','run'):
+        assert db.execute(f'SELECT count(*) FROM {table}').fetchone()[0] >= 0
+    assert db.execute('SELECT count(*) FROM evidence').fetchone()[0] == len(fixture())
+    assert db.execute("SELECT status FROM run ORDER BY id DESC LIMIT 1").fetchone()[0]=='done'
+    assert result['B1']=='accepted'
