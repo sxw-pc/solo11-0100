@@ -6,7 +6,7 @@ from dockscan.rules import evaluate
 from dockscan.store import connect
 
 def test_demo(tmp_path):
-    path=demo(tmp_path);data=json.loads(path.read_text(encoding='utf-8'))
+    path=demo(tmp_path,policy='consensus');data=json.loads(path.read_text(encoding='utf-8'))
     assert data['decision'] and data['source'] and data['event']
     assert data['decision'][0]['status']=='accepted'
     assert path.with_suffix('.md').exists()
@@ -25,7 +25,7 @@ def test_idempotency_and_conflict(tmp_path):
 def test_missing_evidence(tmp_path):
     base=Path(__file__).parent.parent/'fixtures';db=tmp_path/'x.db'
     freeze_config(db,base/'config.json')
-    result=evaluate(db)
+    result=evaluate(db,policy='consensus')
     assert 'accepted' not in result.values()
 
 def test_configuration_is_frozen(tmp_path):

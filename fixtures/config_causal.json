@@ -1,0 +1,26 @@
+{
+  "boxes": [
+    {
+      "box": "B1",
+      "order": "O1",
+      "pallet": "P1",
+      "quantity": 4,
+      "dock": "D1",
+      "window_start": "2026-01-01T08:00:00Z",
+      "window_end": "2026-01-01T10:00:00Z",
+      "expected_kg": 20,
+      "tolerance_kg": 2
+    },
+    {
+      "box": "B2",
+      "order": "O2",
+      "pallet": "P2",
+      "quantity": 2,
+      "dock": "D1",
+      "window_start": "2026-01-01T08:00:00Z",
+      "window_end": "2026-01-01T10:00:00Z",
+      "expected_kg": 10,
+      "tolerance_kg": 1
+    }
+  ]
+}

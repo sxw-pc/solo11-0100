@@ -41,7 +41,14 @@ def import_file(db_path,path):
                 row=json.loads(line)
                 kind=str(row['kind']); subject=str(row['subject']);ts=str(row['time'])
                 normalized=timestamp(ts).astimezone(timezone.utc).isoformat()
-                identity=str(row.get('identity') or f"{row['device']}:{int(row['seq'])}")
+                # 设备与设备内序号是独立于时间戳的证据列：时间同刻时，同设备 seq 仍可证先后
+                device=str(row['device']) if row.get('device') is not None else None
+                seq_raw=row.get('seq')
+                if seq_raw is None and device is not None: raise ValueError('missing_seq')
+                seq=int(seq_raw) if seq_raw is not None else None
+                if seq is not None and seq < 0: raise ValueError('negative_seq')
+                identity=str(row.get('identity') or (f"{device}:{seq}" if device is not None else ''))
+                if not identity: raise ValueError('missing_identity')
                 if not kind or not subject: raise ValueError('missing_kind_or_subject')
                 canonical=json.dumps(row,sort_keys=True,ensure_ascii=False,separators=(',',':'))
                 h=hash_bytes(canonical.encode())
@@ -49,7 +56,7 @@ def import_file(db_path,path):
                 if old:
                     if old['sha256']!=h: db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('identity_conflict',identity))
                     continue
-                db.execute('INSERT INTO event(source_id,line_no,identity,subject,kind,time,payload,sha256) VALUES (?,?,?,?,?,?,?,?)',(sid,line_no,identity,subject,kind,normalized,canonical,h));count+=1
+                db.execute('INSERT INTO event(source_id,line_no,identity,subject,kind,time,payload,sha256,device,seq) VALUES (?,?,?,?,?,?,?,?,?,?)',(sid,line_no,identity,subject,kind,normalized,canonical,h,device,seq));count+=1
             except (ValueError,TypeError,KeyError,json.JSONDecodeError) as exc:
                 db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('parse_error',json.dumps({'source_id':sid,'line_no':line_no,'error':str(exc),'raw_line':line},ensure_ascii=False)))
     db.close();return {'imported':count,'duplicate_file':False}
