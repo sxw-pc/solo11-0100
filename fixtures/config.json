@@ -1,4 +1,8 @@
 {
+  "review": {
+    "policy": "single",
+    "reviewers": ["alice", "bob", "carol"]
+  },
   "boxes": [
     {
       "box": "B1",

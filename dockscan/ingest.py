@@ -19,6 +19,12 @@ def freeze_config(db_path,config):
     ids=[item.get('box',item.get('id')) for item in subjects]
     if not ids or any(not item for item in ids) or len(ids)!=len(set(ids)):
         raise ValueError('duplicate_or_missing_subject')
+    review=parsed.get('review',{})
+    if review.get('policy','single') not in ('single','dual'):
+        db.close();raise ValueError('invalid_review_policy')
+    reviewers=review.get('reviewers',[])
+    if not isinstance(reviewers,list) or any(not isinstance(r,str) or not r.strip() for r in reviewers) or len(reviewers)!=len(set(reviewers)):
+        db.close();raise ValueError('invalid_reviewer_list')
     with db:
         old=db.execute("SELECT value FROM meta WHERE key='config_hash'").fetchone()
         if old and old['value']!=digest: raise ValueError('frozen_config_conflict')
