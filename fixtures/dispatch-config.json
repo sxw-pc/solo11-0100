@@ -1,0 +1,37 @@
+{
+  "boxes": [
+    {
+      "tolerance_kg": 2,
+      "window_end": "2030-06-01T08:50:00Z",
+      "dock": "D1",
+      "order": "O1",
+      "box": "B1",
+      "window_start": "2030-06-01T08:00:00Z",
+      "expected_kg": 50,
+      "pallet": "P1",
+      "quantity": 1
+    },
+    {
+      "tolerance_kg": 2,
+      "window_end": "2030-06-01T08:50:00Z",
+      "dock": "D1",
+      "order": "O2",
+      "box": "B2",
+      "window_start": "2030-06-01T08:00:00Z",
+      "expected_kg": 50,
+      "pallet": "P2",
+      "quantity": 1
+    },
+    {
+      "tolerance_kg": 2,
+      "window_end": "2030-06-01T08:50:00Z",
+      "dock": "D1",
+      "order": "O3",
+      "box": "B3",
+      "window_start": "2030-06-01T08:00:00Z",
+      "expected_kg": 50,
+      "pallet": "P3",
+      "quantity": 1
+    }
+  ]
+}
