@@ -1,0 +1,6 @@
+{"kind": "gate", "subject": "B1", "identity": "D1:1", "time": "2026-01-01T08:05:00Z", "dock": "D1"}
+{"kind":"unload","subject":"B1","identity":"D1:2","time":"2026-01-01T08:10:00Z","dock":"D1","quantity":5}
+{"kind": "weight", "subject": "B1", "identity": "D1:3", "time": "2026-01-01T08:15:00Z", "dock": "D1", "net_kg": 20}
+{"kind": "check", "subject": "B1", "identity": "D1:4", "time": "2026-01-01T08:20:00Z", "dock": "D1"}
+{"kind": "exit", "subject": "B1", "identity": "D1:5", "time": "2026-01-01T08:25:00Z", "dock": "D1"}
+{"kind":"split","subject":"B1","identity":"D1:6","time":"2026-01-01T08:29:00Z","dock":"D1","quantity":5,"children":[{"id":"B1a","quantity":2,"units":["U1","U2"]},{"id":"B1b","quantity":3,"units":["U3","U4","U5"]}]}
