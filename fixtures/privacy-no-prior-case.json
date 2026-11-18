@@ -1,0 +1,1 @@
+{"boxes":["B1","B2","B3"],"confidential_field":"freight_rate_cents","prior_releases":[],"proposed":{"id":"R2","boxes":["B1","B2"],"sum_cents":300,"source_version":"v1"},"contracts":["internal_auditor_exact_access","carrier_consortium_non_inference"]}
