@@ -14,6 +14,11 @@ CREATE TABLE IF NOT EXISTS evidence(subject TEXT NOT NULL REFERENCES subject(id)
 CREATE TABLE IF NOT EXISTS run(id INTEGER PRIMARY KEY,started_at TEXT NOT NULL,completed_at TEXT,status TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS lineage(parent_box TEXT NOT NULL,child_box TEXT NOT NULL,quantity INTEGER NOT NULL,kind TEXT NOT NULL,event_id INTEGER NOT NULL REFERENCES event(id),PRIMARY KEY(parent_box,child_box,event_id));
 CREATE TABLE IF NOT EXISTS climate_case(id TEXT PRIMARY KEY,payload TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS climate_reading(case_id TEXT NOT NULL REFERENCES climate_case(id),dock TEXT NOT NULL,at TEXT NOT NULL,temp_c REAL NOT NULL,source TEXT NOT NULL,sha256 TEXT NOT NULL,PRIMARY KEY(case_id,dock,at));
+CREATE TABLE IF NOT EXISTS climate_plan(case_id TEXT NOT NULL,objective TEXT NOT NULL,version INTEGER NOT NULL,status TEXT NOT NULL,payload TEXT NOT NULL,input_digest TEXT NOT NULL,created_at TEXT NOT NULL,PRIMARY KEY(case_id,objective,version));
+CREATE TABLE IF NOT EXISTS climate_command(case_id TEXT NOT NULL,objective TEXT NOT NULL,version INTEGER NOT NULL,period INTEGER NOT NULL,dock TEXT,energy_cents INTEGER NOT NULL,status TEXT NOT NULL,PRIMARY KEY(case_id,objective,version,period),FOREIGN KEY(case_id,objective,version) REFERENCES climate_plan(case_id,objective,version));
+CREATE TABLE IF NOT EXISTS climate_trajectory(case_id TEXT NOT NULL,objective TEXT NOT NULL,version INTEGER NOT NULL,period INTEGER NOT NULL,dock TEXT NOT NULL,start_temp REAL NOT NULL,warming REAL NOT NULL,cooling_delta REAL NOT NULL,end_temp REAL NOT NULL,limit_c REAL NOT NULL,exposure REAL NOT NULL,source TEXT NOT NULL,price_cents INTEGER NOT NULL,chiller_owner TEXT,PRIMARY KEY(case_id,objective,version,period,dock),FOREIGN KEY(case_id,objective,version) REFERENCES climate_plan(case_id,objective,version));
+CREATE TABLE IF NOT EXISTS climate_hold(id INTEGER PRIMARY KEY AUTOINCREMENT,case_id TEXT NOT NULL,objective TEXT NOT NULL,reasons TEXT NOT NULL,input_digest TEXT NOT NULL,created_at TEXT NOT NULL);
 """
 def connect(path):
     p=Path(path);p.parent.mkdir(parents=True,exist_ok=True)
