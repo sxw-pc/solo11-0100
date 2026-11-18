@@ -1,0 +1,11 @@
+{
+  "kind": "add_parcel",
+  "parcel": {
+    "id": "P3",
+    "source_child_box": "B1a",
+    "received_at": "2026-01-02T09:00:00Z",
+    "inspections": [
+      {"unit": "U9", "condition": "sealed", "seal": "intact"}
+    ]
+  }
+}
