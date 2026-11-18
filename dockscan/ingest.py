@@ -28,13 +28,14 @@ def freeze_config(db_path,config):
         for item in subjects:
             db.execute("INSERT OR IGNORE INTO subject VALUES (?,?)",(item.get('box',item.get('id')),'batch-1'))
     db.close();return digest
-def import_file(db_path,path):
+def import_file(db_path,path,archive=True,store_root=None):
     raw=Path(path).read_bytes(); digest=hash_bytes(raw);db=connect(db_path)
-    if db.execute('SELECT 1 FROM source WHERE sha256=?',(digest,)).fetchone():
-        db.close();return {'imported':0,'duplicate_file':True}
+    existing=db.execute('SELECT id FROM source WHERE sha256=?',(digest,)).fetchone()
+    if existing:
+        db.close();return {'imported':0,'duplicate_file':True,'source_id':existing['id'],'archived':None}
     count=0
     with db:
-        sid=db.execute('INSERT INTO source(path,sha256,raw) VALUES (?,?,?)',(str(path),digest,raw)).lastrowid
+        sid=db.execute('INSERT INTO source(path,sha256,raw,length,version,storage) VALUES (?,?,?,?,1,?)',(str(path),digest,raw,len(raw),'blob')).lastrowid
         for line_no,line in enumerate(raw.decode('utf-8-sig').splitlines(),1):
             if not line.strip(): continue
             try:
@@ -52,4 +53,14 @@ def import_file(db_path,path):
                 db.execute('INSERT INTO event(source_id,line_no,identity,subject,kind,time,payload,sha256) VALUES (?,?,?,?,?,?,?,?)',(sid,line_no,identity,subject,kind,normalized,canonical,h));count+=1
             except (ValueError,TypeError,KeyError,json.JSONDecodeError) as exc:
                 db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('parse_error',json.dumps({'source_id':sid,'line_no':line_no,'error':str(exc),'raw_line':line},ensure_ascii=False)))
-    db.close();return {'imported':count,'duplicate_file':False}
+    archived=None
+    if archive:
+        # A source imported after the archive went live must immediately get a
+        # manifest in a new published generation (the previous generation is
+        # retained for readers still pinned to it).  Before the archive is
+        # initialised the raw BLOB is the only representation; migration later
+        # picks it up.
+        from .archive import active_generation,archive_sources
+        if active_generation(db) is not None:
+            archived=archive_sources(db,store_root=store_root)
+    db.close();return {'imported':count,'duplicate_file':False,'source_id':sid,'archived':archived}

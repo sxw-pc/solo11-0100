@@ -4,6 +4,11 @@
 
 数据流：预约配置 → 来源文件 → 事件规范化 → 事件时间排序 → 装卸状态机与拆并箱谱系 → 数量、称重、月台核对 → 差异结算 → JSON/Markdown 交接报告。
 
+原始来源字节可在不改变来源身份与证据链的前提下，由 `source.raw` BLOB 迁移为不可改写
+内容寻址块仓与每来源 manifest（详见 `docs/ARCHIVE.md`）。迁移按世代发布，读者钉住打开
+时的世代；只有逐字节校验通过的块才被发布、只有不再被已发布世代或活跃读者引用的块才被
+GC。业务判定与事件/证据表不因存储表示改变。
+
 合法装卸顺序是 `gate → unload → check → exit`。称重与拆并箱事件不推进此状态。错误码 `illegal_transition` 阻断交接；缺少阶段为 `missing_stage`。拆箱 `children` 与并箱 `parents` 的数量之和须等于事件声明数量，只有守恒的关系写入 `lineage`。数量差异区分 `shortage` 与 `overage`，缺重为 `missing_weight`，越容差为 `weight_mismatch`。月台或时间窗口不符是 `wrong_dock_or_window`。未知箱号保留 `unknown_box` 问题。
 
 决策为 `accepted`、`pending` 或 `blocked`。阻断问题不会因其他正常扫描被覆盖；缺少证据不会得到 accepted。每次重算只更新决策、业务问题与谱系，来源和原始事件不可变。配置文件哈希冻结在数据库；修改预约单须使用新工作区。当前只处理单批次本地扫描，不与仓储系统或承运人联网。
