@@ -8,6 +8,37 @@ def timestamp(text):
     dt=datetime.fromisoformat(text.replace('Z','+00:00'))
     if dt.tzinfo is None: raise ValueError('timezone_required')
     return dt
+
+def pallet_identity(db, pallet_id):
+    """Resolve a pallet to the frozen manifest boxes that carry it.
+
+    Raises ValueError with a stable code instead of guessing when the
+    roster is missing, duplicated, or has no pallet mapping.
+    """
+    row=db.execute("SELECT value FROM meta WHERE key='config_json'").fetchone()
+    if row is None: raise ValueError('unclaimed_config_missing')
+    config=json.loads(row['value'])
+    boxes=[b for b in config.get('boxes',[]) if b.get('pallet')==pallet_id]
+    if not boxes: raise ValueError('unknown_unclaimed_pallet')
+    ids=sorted(b['box'] for b in boxes)
+    if len(ids)!=len(set(ids)): raise ValueError('pallet_manifest_conflict')
+    return boxes
+
+def source_events(db, subjects):
+    """Freeze the ingested scan rows that prove the pallet was physically here."""
+    subjects=list(dict.fromkeys(subjects))
+    if not subjects: return []
+    return [dict(event) for event in db.execute(
+        'SELECT e.id,e.subject,e.identity,e.kind,e.time,e.sha256,s.sha256 AS source_sha256 '
+        'FROM event e JOIN source s ON s.id=e.source_id '
+        'WHERE e.subject IN (' + ','.join('?' for _ in subjects) + ') ORDER BY e.time,e.id', subjects)]
+
+def source_fingerprint(pallet_id, events):
+    """A stable identity for the exact original scan evidence a release cites."""
+    material=json.dumps({'pallet':pallet_id,
+                          'events':[[e['id'],e['identity'],e['sha256'],e['source_sha256']] for e in events]},
+                         sort_keys=True,separators=(',',':'))
+    return hash_bytes(material.encode())
 def freeze_config(db_path,config):
     raw=Path(config).read_bytes();digest=hash_bytes(raw); db=connect(db_path)
     old=db.execute("SELECT value FROM meta WHERE key='config_hash'").fetchone()

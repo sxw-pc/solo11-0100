@@ -1,0 +1,10 @@
+{"kind": "gate", "subject": "B1", "identity": "D1:1", "time": "2026-01-01T08:05:00Z", "dock": "D1"}
+{"kind": "unload", "subject": "B1", "identity": "D1:2", "time": "2026-01-01T08:10:00Z", "dock": "D1", "quantity": 4}
+{"kind": "weight", "subject": "B1", "identity": "D1:3", "time": "2026-01-01T08:15:00Z", "dock": "D1", "net_kg": 20}
+{"kind": "check", "subject": "B1", "identity": "D1:4", "time": "2026-01-01T08:20:00Z", "dock": "D1"}
+{"kind": "exit", "subject": "B1", "identity": "D1:5", "time": "2026-01-01T08:25:00Z", "dock": "D1"}
+{"kind": "gate", "subject": "B2", "identity": "D1:11", "time": "2026-01-01T08:06:00Z", "dock": "D1"}
+{"kind": "unload", "subject": "B2", "identity": "D1:12", "time": "2026-01-01T08:11:00Z", "dock": "D1", "quantity": 6}
+{"kind": "weight", "subject": "B2", "identity": "D1:13", "time": "2026-01-01T08:16:00Z", "dock": "D1", "net_kg": 30}
+{"kind": "check", "subject": "B2", "identity": "D1:14", "time": "2026-01-01T08:21:00Z", "dock": "D1"}
+{"kind": "exit", "subject": "B2", "identity": "D1:15", "time": "2026-01-01T08:26:00Z", "dock": "D1"}
